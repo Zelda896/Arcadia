@@ -1,0 +1,8 @@
+{{define "content"}}
+<h1>后台</h1>
+<p class="nav"><a href="/admin/posts">文章</a> · <a href="/admin/pages">页面</a> · <a href="/admin/comments">评论</a> · <a href="/">看站点</a></p>
+<hr>
+<p>{{len .Posts}} 篇内容，{{.Total}} 条评论{{if .Pending}}，<a href="/admin/comments">{{len .Pending}} 条待审核</a>{{end}}。</p>
+<p><a href="/admin/new">写文章</a> · <a href="/admin/new?kind=page">新建页面</a></p>
+<form method="post" action="/admin/logout"><p><button type="submit">退出登录</button></p></form>
+{{end}}

@@ -1,0 +1,14 @@
+{{define "content"}}
+{{if .Tagline}}<p class="sub">{{.Tagline}}</p>{{end}}
+<hr>
+{{range .Groups}}
+<h2>{{.Year}}</h2>
+<ul>
+{{range .Posts}}
+<li><a href="{{.URL}}">{{.Title}}</a> <span class="sub">— {{mmdd .Date}}</span></li>
+{{end}}
+</ul>
+{{else}}
+<p class="sub">还没有文章。</p>
+{{end}}
+{{end}}

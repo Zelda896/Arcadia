@@ -1,0 +1,10 @@
+{{define "content"}}
+<h1>标签：{{.Tag}}</h1>
+<ul>
+{{range .Posts}}
+<li><a href="{{.URL}}">{{.Title}}</a> <span class="sub">— {{date .Date}}</span></li>
+{{else}}
+<li>这个标签下还没有文章。</li>
+{{end}}
+</ul>
+{{end}}

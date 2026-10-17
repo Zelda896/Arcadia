@@ -1,0 +1,18 @@
+{{define "content"}}
+<h1>评论</h1>
+<p class="nav"><a href="/admin">后台</a> · 共 {{.Total}} 条</p>
+<hr>
+{{range .All}}
+<div class="comment">
+<p class="sub"><a href="/post/{{.Slug}}">{{.Slug}}</a> · {{.Author}} · {{datetime .CreatedAt}}{{if not .Approved}} · <span class="mark">待审核</span>{{end}}</p>
+<div class="body">{{.HTML}}</div>
+<div class="acts">
+<form method="post" action="/admin/comments/{{.ID}}/approve"><button type="submit">通过</button></form>
+<form method="post" action="/admin/comments/{{.ID}}/hide"><button type="submit">隐藏</button></form>
+<form method="post" action="/admin/comments/{{.ID}}/delete" data-confirm="彻底删除这条评论？"><button type="submit" class="danger">删除</button></form>
+</div>
+</div>
+{{else}}
+<p class="sub">还没有评论。</p>
+{{end}}
+{{end}}

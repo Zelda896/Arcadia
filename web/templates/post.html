@@ -1,0 +1,33 @@
+{{define "content"}}
+<article>
+<h1>{{.Post.Title}}</h1>
+<p class="sub">{{datetime .Post.Date}}{{range .Post.Tags}} · <a href="/tags/{{.}}">{{.}}</a>{{end}}{{if .Post.Draft}} · <span class="mark">草稿</span>{{end}}</p>
+<hr>
+<div class="body">{{.Post.HTML}}</div>
+</article>
+
+<hr>
+
+<section id="comments">
+<h2>评论{{if .Comments}}（{{len .Comments}}）{{end}}</h2>
+
+{{if .Notice}}<p class="sub">{{.Notice}}</p>{{end}}
+{{if .Error}}<p class="err">{{.Error}}</p>{{end}}
+
+{{range .Comments}}
+<div class="comment">
+<p class="sub">{{.Author}} · {{datetime .CreatedAt}}{{if not .Approved}} · <span class="mark">待审核</span>{{end}}</p>
+<div class="body">{{.HTML}}</div>
+</div>
+{{else}}
+<p class="sub">还没有人说话。</p>
+{{end}}
+
+<form method="post" action="/post/{{.Post.Slug}}/comment" class="comment-form">
+<p class="hp"><label>网址 <input name="website" tabindex="-1" autocomplete="off"></label></p>
+<p><input name="author" maxlength="40" required placeholder="名字" aria-label="名字"></p>
+<p><textarea name="body" rows="6" maxlength="4000" required placeholder="说点什么。支持 markdown。" aria-label="评论内容"></textarea></p>
+<p><button type="submit">提交</button> <span class="sub">提交后立刻显示</span></p>
+</form>
+</section>
+{{end}}

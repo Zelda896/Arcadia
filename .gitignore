@@ -1,0 +1,20 @@
+# 编译产物：能随时重新生成，不进版本库
+/arcadia.exe
+/arcadia-linux-amd64
+/bin/
+
+# 运行时数据：评论、IP 盐、会话，属于私人数据
+/data/
+
+# 截图
+/shots/
+
+# 本地配置：里面有密码哈希
+.env
+.env.local
+
+# 编辑器
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,56 @@
+{{define "content"}}
+<h1>{{if .Post.Slug}}编辑{{else}}新建{{end}}{{if eq .Kind "page"}}页面{{else}}文章{{end}}</h1>
+<p class="nav"><a href="/admin/{{.Kind}}s">返回列表</a> · <a href="/admin">后台</a></p>
+{{if .Notice}}<p class="sub">{{.Notice}}</p>{{end}}
+<hr>
+
+<form method="post" action="/admin/save" id="editor-form">
+<input type="hidden" name="kind" value="{{.Kind}}">
+{{if .Post.Slug}}<input type="hidden" name="origin" value="{{.Post.Slug}}">{{end}}
+
+<div class="titlerow">
+<input name="title" value="{{.Post.Title}}" placeholder="标题" required autofocus aria-label="标题">
+<label class="cb"><input type="checkbox" name="draft" {{if .Post.Draft}}checked{{end}}> 草稿</label>
+</div>
+
+<div class="fields">
+<label>slug
+{{if .Post.Slug}}
+<input name="slug" value="{{.Post.Slug}}" readonly aria-label="slug">
+{{else}}
+<input name="slug" placeholder="留空自动生成" aria-label="slug">
+{{end}}
+</label>
+{{if eq .Kind "post"}}
+<label>日期 <input type="date" name="date" value="{{date .Post.Date}}"></label>
+<label>时间 <input type="time" name="time" value="{{.Post.Date.Format "15:04"}}"></label>
+<label>标签 <input name="tags" value="{{join .Post.Tags ", "}}" placeholder="逗号分隔" aria-label="标签"></label>
+{{else}}
+<label>导航顺序 <input type="number" name="order" value="{{.Post.Order}}" placeholder="小的在前" aria-label="导航顺序"></label>
+<label class="cb"><input type="checkbox" name="nav" {{if .Post.Nav}}checked{{end}}> 放进顶部导航</label>
+{{end}}
+</div>
+
+<p class="upload">
+<input type="file" id="file" accept="image/jpeg,image/png,image/gif,image/webp" multiple>
+<span class="sub" id="upload-msg">选多张会依次上传，原图直接存</span>
+</p>
+
+<p><textarea name="body" id="body" rows="18" required spellcheck="false" aria-label="正文">{{.Post.Body}}</textarea></p>
+
+<p><button type="submit">保存</button> <span class="sub">Ctrl+S</span></p>
+</form>
+
+<hr>
+<h2>预览</h2>
+<div class="body" id="preview"><p class="sub">停止输入后自动渲染。</p></div>
+
+{{if .Post.Slug}}
+<hr>
+<form method="post" action="/admin/delete" data-confirm="删掉《{{.Post.Title}}》？">
+<input type="hidden" name="kind" value="{{.Kind}}">
+<input type="hidden" name="slug" value="{{.Post.Slug}}">
+<p><button type="submit" class="danger">删除</button></p>
+</form>
+{{end}}
+{{end}}

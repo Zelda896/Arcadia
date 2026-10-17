@@ -1,0 +1,11 @@
+/* 目标风格就是浏览器默认排版：不限宽、不居中、不用系统商店字体。
+   这里只补五件必须的，其余全部交给浏览器。 */
+
+body { font-family: serif; line-height: 1.6; }
+img { max-width: 100%; height: auto; }
+pre { overflow-x: auto; }
+code, pre { font-family: Consolas, "Courier New", monospace; font-size: .95em; }
+input, textarea, button { font: inherit; }
+textarea { width: 100%; }
+.sub { color: #555; }
+.hp { display: none; }

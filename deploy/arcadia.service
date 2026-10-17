@@ -1,0 +1,27 @@
+[Unit]
+Description=arcadia
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/arcadia
+ExecStart=/opt/arcadia/bin/arcadia -addr=127.0.0.1:8080 -content=/opt/arcadia/content -data=/opt/arcadia/data
+EnvironmentFile=/opt/arcadia/.env
+Restart=always
+RestartSec=3
+
+# 403 MiB 的机器上，这条防止自己把整机吃光。真撞上了只会杀自己，
+# 不会连累 Nginx 和 sshd——内存耗尽时 SSH 进不去，只能去控制台重启。
+MemoryMax=150M
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/arcadia/content /opt/arcadia/data
+
+[Install]
+WantedBy=multi-user.target

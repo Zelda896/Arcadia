@@ -1,0 +1,9 @@
+{{define "content"}}
+<h1>登录</h1>
+{{if .Error}}<p class="err">{{.Error}}</p>{{end}}
+<form method="post" action="/admin/login" class="narrow">
+<p><input name="user" placeholder="用户名" required autocomplete="username" aria-label="用户名"></p>
+<p><input name="password" type="password" placeholder="密码" required autocomplete="current-password" aria-label="密码"></p>
+<p><button type="submit">登录</button></p>
+</form>
+{{end}}

@@ -1,0 +1,18 @@
+{{define "content"}}
+<h1>{{if eq .Kind "page"}}页面{{else}}文章{{end}}</h1>
+<p class="nav"><a href="/admin/new?kind={{.Kind}}">新建</a> · <a href="/admin">后台</a> · <a href="/admin/posts">文章</a> · <a href="/admin/pages">页面</a></p>
+<hr>
+<ul class="posts plain">
+{{range .Posts}}
+<li>
+<span class="d">{{if eq .Kind "post"}}{{date .Date}}{{else}}—{{end}}</span>
+<a href="/admin/edit?kind={{.Kind}}&amp;slug={{.Slug}}">{{.Title}}</a>
+{{if .Draft}}<span class="mark">草稿</span>{{end}}
+{{if .Nav}}<span class="sub">导航</span>{{end}}
+<span class="sub">{{.Slug}}</span>
+</li>
+{{else}}
+<li class="sub">还没有内容。<a href="/admin/new?kind={{.Kind}}">写第一个</a>。</li>
+{{end}}
+</ul>
+{{end}}
