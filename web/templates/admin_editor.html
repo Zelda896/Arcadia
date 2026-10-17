@@ -45,7 +45,7 @@
 <h2>预览</h2>
 <div class="body" id="preview"><p class="sub">停止输入后自动渲染。</p></div>
 
-{{if .Post.Slug}}
+{{if and .Post.Slug (ne .Post.Slug "about")}}
 <hr>
 <form method="post" action="/admin/delete" data-confirm="删掉《{{.Post.Title}}》？">
 <input type="hidden" name="kind" value="{{.Kind}}">

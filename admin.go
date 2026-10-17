@@ -151,6 +151,13 @@ func (a *App) handleDelete(w http.ResponseWriter, r *http.Request) {
 	if kind != "page" {
 		kind = "post"
 	}
+
+	// 关于页是导航和后台入口的固定落点，删了会连登录入口一起消失
+	if kind == "page" && slug == "about" {
+		http.Error(w, "关于页不能删除", http.StatusBadRequest)
+		return
+	}
+
 	doc := a.docs.Post(slug)
 	if kind == "page" {
 		doc = a.docs.Page(slug)

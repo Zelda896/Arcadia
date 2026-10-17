@@ -5,4 +5,7 @@
 <hr>
 <div class="body">{{.Page.HTML}}</div>
 </article>
+{{if eq .Page.Slug "about"}}
+<p class="sub"><a href="/admin/login">管理</a></p>
+{{end}}
 {{end}}
