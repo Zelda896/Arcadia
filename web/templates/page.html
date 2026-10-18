@@ -1,4 +1,5 @@
 {{define "content"}}
+{{if .Page.TOC}}<aside class="toc">{{.Page.TOC}}</aside>{{end}}
 <article>
 <h1>{{.Page.Title}}</h1>
 {{if .Page.Draft}}<p class="sub"><span class="mark">草稿</span></p>{{end}}

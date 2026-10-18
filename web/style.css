@@ -1,7 +1,13 @@
-/* 目标风格就是浏览器默认排版：不限宽、不居中、不用系统商店字体。
-   这里只补五件必须的，其余全部交给浏览器。 */
+/* 浏览器默认排版，只是把内容收进中间、不让它贴到屏幕边上。
+   60rem 在 1920 屏上约占一半宽，比公众号那种 700px 的窄栏宽出一截。 */
 
-body { font-family: serif; line-height: 1.6; }
+body {
+  font-family: serif;
+  line-height: 1.6;
+  max-width: 73rem;
+  margin: 0 auto;
+  padding: 2em 1.5em;
+}
 img { max-width: 100%; height: auto; }
 pre { overflow-x: auto; }
 code, pre { font-family: Consolas, "Courier New", monospace; font-size: .95em; }
@@ -9,3 +15,27 @@ input, textarea, button { font: inherit; }
 textarea { width: 100%; }
 .sub { color: #555; }
 .hp { display: none; }
+
+/* 目录贴在左侧留白里。只在足够宽的窗口出现——窄屏那 152 像素
+   挤不出位置，硬塞会压到正文上。1560px 是算出来的临界值：
+   正文 73rem 居中之后，两侧留白要剩下 1.5rem + 9.5rem 才放得下。 */
+.toc { display: none; }
+
+@media (min-width: 1560px) {
+  .toc {
+    display: block;
+    position: fixed;
+    top: 5em;
+    left: calc(50% - 47.5rem);
+    width: 9.5rem;
+    max-height: calc(100vh - 7em);
+    overflow-y: auto;
+    font-size: .85rem;
+    line-height: 1.55;
+  }
+  .toc ul { list-style: none; padding: 0; margin: 0; }
+  .toc ul ul { padding-left: .9em; }
+  .toc li { margin: .3em 0; }
+  .toc a { color: #666; }
+  .toc a:hover { color: #000; }
+}

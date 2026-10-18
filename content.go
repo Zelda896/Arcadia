@@ -30,6 +30,7 @@ type Doc struct {
 	Order int  // 导航排序，小的在前
 	Body  string
 	HTML  template.HTML
+	TOC   template.HTML
 	Path  string
 	Kind  string // post / page
 }
@@ -227,7 +228,7 @@ func (s *DocStore) parse(path, kind string) (*Doc, error) {
 		}
 	}
 
-	h, err := s.render.HTML(body)
+	h, nav, err := s.render.Render(body)
 	if err != nil {
 		return nil, err
 	}
@@ -235,7 +236,7 @@ func (s *DocStore) parse(path, kind string) (*Doc, error) {
 	return &Doc{
 		Slug: slug, Title: title, Date: date, Tags: tags,
 		Draft: fm.Draft, Nav: fm.Nav, Order: fm.Order,
-		Body: string(body), HTML: h, Path: path, Kind: kind,
+		Body: string(body), HTML: h, TOC: nav, Path: path, Kind: kind,
 	}, nil
 }
 
