@@ -1,6 +1,7 @@
 ---
 title: 这个站是怎么搭的
 date: 2026-10-17 14:00
+category: 杂谈
 tags: [站务, Go]
 draft: false
 ---

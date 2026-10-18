@@ -6,11 +6,12 @@
 
 <form method="post" action="/admin/save" id="editor-form">
 <input type="hidden" name="kind" value="{{.Kind}}">
+<input type="hidden" name="draft_state" value="{{if .Post.Draft}}1{{else}}0{{end}}">
 {{if .Post.Slug}}<input type="hidden" name="origin" value="{{.Post.Slug}}">{{end}}
 
 <div class="titlerow">
 <input name="title" value="{{.Post.Title}}" placeholder="标题" required autofocus aria-label="标题">
-<label class="cb"><input type="checkbox" name="draft" {{if .Post.Draft}}checked{{end}}> 草稿</label>
+{{if .Post.Draft}}<span class="sub">草稿</span>{{end}}
 </div>
 
 <div class="fields">
@@ -22,6 +23,12 @@
 {{end}}
 </label>
 {{if eq .Kind "post"}}
+<label>分类
+<select name="category">
+{{$cur := .Post.Category}}
+{{range .AllCats}}<option value="{{.}}"{{if eq . $cur}} selected{{end}}>{{.}}</option>{{end}}
+</select>
+</label>
 <label>日期 <input type="date" name="date" value="{{date .Post.Date}}"></label>
 <label>时间 <input type="time" name="time" value="{{.Post.Date.Format "15:04"}}"></label>
 <label>标签 <input name="tags" value="{{join .Post.Tags ", "}}" placeholder="逗号分隔" aria-label="标签"></label>
@@ -38,7 +45,17 @@
 
 <p><textarea name="body" id="body" rows="18" required spellcheck="false" aria-label="正文">{{.Post.Body}}</textarea></p>
 
-<p><button type="submit">保存</button> <span class="sub">Ctrl+S</span></p>
+<p>
+{{if .Post.Draft}}
+<button type="submit" name="action" value="save">保存草稿</button>
+<button type="submit" name="action" value="publish">发布</button>
+<span class="sub">保存只有你自己看得到，发布才会上首页</span>
+{{else}}
+<button type="submit" name="action" value="save">保存</button>
+<button type="submit" name="action" value="draft">转为草稿</button>
+<span class="sub">Ctrl+S 保存</span>
+{{end}}
+</p>
 </form>
 
 <hr>

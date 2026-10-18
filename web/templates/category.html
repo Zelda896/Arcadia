@@ -1,13 +1,10 @@
 {{define "content"}}
-<h1>归档</h1>
-{{range .Groups}}
-<h2>{{.Year}}</h2>
+<h1>{{.CatName}}</h1>
 <ul>
 {{range .Posts}}
 <li><a href="{{.URL}}">{{.Title}}</a> <span class="sub">— {{date .Date}}</span></li>
+{{else}}
+<li>这个分类下还没有文章。</li>
 {{end}}
 </ul>
-{{else}}
-<p class="sub">还没有文章。</p>
-{{end}}
 {{end}}

@@ -27,16 +27,16 @@ shutil.copytree(os.path.join(ROOT, "content"), content)
 os.makedirs(data)
 
 demo = [
-    ("2026/10/edge-inference", "RK3588 上跑多路视频推理时的内存分配", "2026-10-09 22:14", ["RK3588", "嵌入式"]),
-    ("2026/09/openwrt-build", "从零交叉编译一个 OpenWrt 软件包", "2026-09-21 19:02", ["OpenWrt"]),
-    ("2026/08/tcp-congestion", "在丢包 3% 的链路上，BBR 到底比 CUBIC 好在哪", "2026-08-14 01:37", ["网络"]),
-    ("2026/03/esp32-lowpower", "ESP32 深睡眠模式下那 12 微安是怎么省出来的", "2026-03-06 23:48", ["ESP32"]),
-    ("2025/12/first-post", "开始记点东西", "2025-12-02 10:05", []),
+    ("2026/10/edge-inference", "RK3588 上跑多路视频推理时的内存分配", "2026-10-09 22:14", "网络", ["RK3588", "嵌入式"]),
+    ("2026/09/openwrt-build", "从零交叉编译一个 OpenWrt 软件包", "2026-09-21 19:02", "网络", ["OpenWrt"]),
+    ("2026/08/bbq", "如果记忆可以打包带走", "2026-08-14 01:37", "文章", ["小说"]),
+    ("2026/07/git-workflow", "两个仓库：代码一个，内容一个", "2026-07-30 16:20", "杂谈", ["git"]),
+    ("2026/03/robot", "循迹小车是怎么调通的", "2026-03-06 23:48", "项目", ["STM32"]),
 ]
-for p_, title, date, tags in demo:
+for p_, title, date, cat, tags in demo:
     d = os.path.join(content, "posts", p_)
     os.makedirs(d, exist_ok=True)
-    fm = "---\ntitle: %s\ndate: %s\n" % (title, date)
+    fm = "---\ntitle: %s\ndate: %s\ncategory: %s\n" % (title, date, cat)
     if tags:
         fm += "tags: [%s]\n" % ", ".join(tags)
     fm += "draft: false\n---\n\n占位正文。\n"

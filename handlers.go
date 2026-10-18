@@ -25,24 +25,21 @@ type PageData struct {
 	Error   string
 	Notice  string
 
-	Groups   []YearGroup
+	Groups   []CatGroup
 	Posts    []*Doc
 	Post     *Doc
 	Page     *Doc
 	Comments []Comment
 	Tag      string
+	CatName  string
 	Tags     []string
 
-	All     []Comment
-	Total   int
-	Pending []Comment
-	Kind    string
-	AdminJS bool
-}
-
-type YearGroup struct {
-	Year  string
-	Posts []*Doc
+	All      []Comment
+	Total    int
+	Pending  []Comment
+	Kind     string
+	AllCats  []string
+	AdminJS  bool
 }
 
 func (a *App) base(title string) PageData {
@@ -57,21 +54,9 @@ func (a *App) base(title string) PageData {
 	}
 }
 
-func groupByYear(posts []*Doc) []YearGroup {
-	var groups []YearGroup
-	for _, p := range posts {
-		y := p.Date.Format("2006")
-		if len(groups) == 0 || groups[len(groups)-1].Year != y {
-			groups = append(groups, YearGroup{Year: y})
-		}
-		groups[len(groups)-1].Posts = append(groups[len(groups)-1].Posts, p)
-	}
-	return groups
-}
-
 func (a *App) handleHome(w http.ResponseWriter, r *http.Request) {
 	d := a.base("")
-	d.Groups = groupByYear(a.docs.Posts(false))
+	d.Groups = a.docs.GroupByCategory(false)
 	a.render(w, "home", d)
 }
 
@@ -111,12 +96,17 @@ func (a *App) handlePage(w http.ResponseWriter, r *http.Request) {
 	a.render(w, "page", d)
 }
 
-func (a *App) handleArchive(w http.ResponseWriter, r *http.Request) {
-	d := a.base("归档")
-	posts := a.docs.Posts(false)
+func (a *App) handleCategory(w http.ResponseWriter, r *http.Request) {
+	cat := r.PathValue("cat")
+	posts := a.docs.ByCategory(cat, false)
+	if len(posts) == 0 {
+		http.NotFound(w, r)
+		return
+	}
+	d := a.base(cat)
+	d.CatName = cat
 	d.Posts = posts
-	d.Groups = groupByYear(posts)
-	a.render(w, "archive", d)
+	a.render(w, "category", d)
 }
 
 func (a *App) handleTag(w http.ResponseWriter, r *http.Request) {

@@ -153,7 +153,7 @@ func (a *App) Routes() http.Handler {
 	m.HandleFunc("GET /{$}", a.handleHome)
 	m.HandleFunc("GET /post/{slug}", a.handlePost)
 	m.HandleFunc("POST /post/{slug}/comment", a.handleComment)
-	m.HandleFunc("GET /archive", a.handleArchive)
+	m.HandleFunc("GET /c/{cat}", a.handleCategory)
 	m.HandleFunc("GET /tags/{tag}", a.handleTag)
 	m.HandleFunc("GET /style.css", a.handleCSS)
 	m.HandleFunc("GET /admin.js", a.handleAdminJS)

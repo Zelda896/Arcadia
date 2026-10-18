@@ -2,7 +2,7 @@
 {{if .Post.TOC}}<aside class="toc">{{.Post.TOC}}</aside>{{end}}
 <article>
 <h1>{{.Post.Title}}</h1>
-<p class="sub">{{datetime .Post.Date}}{{range .Post.Tags}} · <a href="/tags/{{.}}">{{.}}</a>{{end}}{{if .Post.Draft}} · <span class="mark">草稿</span>{{end}}</p>
+<p class="sub">{{datetime .Post.Date}}{{if .Post.Category}} · <a href="/c/{{.Post.Category}}">{{.Post.Category}}</a>{{end}}{{range .Post.Tags}} · <a href="/tags/{{.}}">{{.}}</a>{{end}}{{if .Post.Draft}} · <span class="mark">草稿</span>{{end}}</p>
 <hr>
 <div class="body">{{.Post.HTML}}</div>
 </article>

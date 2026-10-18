@@ -41,10 +41,12 @@ func (a *App) handleEditorNew(w http.ResponseWriter, r *http.Request) {
 	d := a.base("新建")
 	d.Kind = kind
 	d.Post = &Doc{
-		Kind: kind,
-		Date: time.Now(),
-		Body: "从这里开始写。\n\n段落之间空一行。\n",
+		Kind:  kind,
+		Date:  time.Now(),
+		Draft: true, // 新写的一律先是草稿，点「发布」才上首页
+		Body:  "从这里开始写。\n\n段落之间空一行。\n",
 	}
+	d.AllCats = a.docs.AllCategories()
 	d.AdminJS = true
 	a.render(w, "admin_editor", d)
 }
@@ -66,6 +68,7 @@ func (a *App) handleEditor(w http.ResponseWriter, r *http.Request) {
 	d := a.base("编辑：" + doc.Title)
 	d.Kind = kind
 	d.Post = doc
+	d.AllCats = a.docs.AllCategories()
 	d.AdminJS = true
 	if r.URL.Query().Get("saved") == "1" {
 		d.Notice = "已保存。"
@@ -108,6 +111,7 @@ func (a *App) handleSave(w http.ResponseWriter, r *http.Request) {
 	doc := &Doc{Slug: slug, Title: title, Body: body, Kind: kind, Date: time.Now()}
 
 	if kind == "post" {
+		doc.Category = strings.TrimSpace(r.PostFormValue("category"))
 		if t := parseDate(r.PostFormValue("date") + " " + r.PostFormValue("time")); !t.IsZero() {
 			doc.Date = t
 		} else if t := parseDate(r.PostFormValue("date")); !t.IsZero() {
@@ -124,7 +128,17 @@ func (a *App) handleSave(w http.ResponseWriter, r *http.Request) {
 			doc.Order = n
 		}
 	}
-	doc.Draft = r.PostFormValue("draft") != ""
+
+	// 三个按钮共用同一个表单：保存保持当前状态，发布上线，转为草稿下架。
+	// 新文章的新建页把 Draft 设成 true，所以点「保存」等于存进草稿箱。
+	switch r.PostFormValue("action") {
+	case "publish":
+		doc.Draft = false
+	case "draft":
+		doc.Draft = true
+	default:
+		doc.Draft = r.PostFormValue("draft_state") == "1"
+	}
 
 	if err := a.docs.Save(doc); err != nil {
 		http.Error(w, "保存失败："+err.Error(), http.StatusInternalServerError)

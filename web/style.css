@@ -11,7 +11,7 @@ body {
 img { max-width: 100%; height: auto; }
 pre { overflow-x: auto; }
 code, pre { font-family: Consolas, "Courier New", monospace; font-size: .95em; }
-input, textarea, button { font: inherit; }
+input, textarea, select, button { font: inherit; }
 textarea { width: 100%; }
 .sub { color: #555; }
 .hp { display: none; }

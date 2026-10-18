@@ -21,18 +21,19 @@ var ErrNotFound = errors.New("找不到")
 // content/posts/2026/10/xxx.md → /post/xxx
 // content/pages/xxx.md         → /xxx
 type Doc struct {
-	Slug  string
-	Title string
-	Date  time.Time
-	Tags  []string
-	Draft bool
-	Nav   bool // 是否出现在顶部导航
-	Order int  // 导航排序，小的在前
-	Body  string
-	HTML  template.HTML
-	TOC   template.HTML
-	Path  string
-	Kind  string // post / page
+	Slug     string
+	Title    string
+	Date     time.Time
+	Category string
+	Tags     []string
+	Draft    bool
+	Nav      bool // 是否出现在顶部导航
+	Order    int  // 导航排序，小的在前
+	Body     string
+	HTML     template.HTML
+	TOC      template.HTML
+	Path     string
+	Kind     string // post / page
 }
 
 func (d *Doc) URL() string {
@@ -49,6 +50,9 @@ func (d *Doc) Raw() string {
 	b.WriteString("title: " + d.Title + "\n")
 	if d.Kind == "post" {
 		b.WriteString("date: " + d.Date.Format("2006-01-02 15:04") + "\n")
+		if d.Category != "" {
+			b.WriteString("category: " + d.Category + "\n")
+		}
 		if len(d.Tags) > 0 {
 			b.WriteString("tags: [" + strings.Join(d.Tags, ", ") + "]\n")
 		}
@@ -193,12 +197,13 @@ func (s *DocStore) parse(path, kind string) (*Doc, error) {
 	meta, body := splitFrontMatter(raw)
 
 	var fm struct {
-		Title string `yaml:"title"`
-		Date  string `yaml:"date"`
-		Tags  []any  `yaml:"tags"`
-		Draft bool   `yaml:"draft"`
-		Nav   bool   `yaml:"nav"`
-		Order int    `yaml:"order"`
+		Title    string `yaml:"title"`
+		Date     string `yaml:"date"`
+		Category string `yaml:"category"`
+		Tags     []any  `yaml:"tags"`
+		Draft    bool   `yaml:"draft"`
+		Nav      bool   `yaml:"nav"`
+		Order    int    `yaml:"order"`
 	}
 	if len(meta) > 0 {
 		if err := yaml.Unmarshal(meta, &fm); err != nil {
@@ -234,8 +239,8 @@ func (s *DocStore) parse(path, kind string) (*Doc, error) {
 	}
 
 	return &Doc{
-		Slug: slug, Title: title, Date: date, Tags: tags,
-		Draft: fm.Draft, Nav: fm.Nav, Order: fm.Order,
+		Slug: slug, Title: title, Date: date, Category: strings.TrimSpace(fm.Category),
+		Tags: tags, Draft: fm.Draft, Nav: fm.Nav, Order: fm.Order,
 		Body: string(body), HTML: h, TOC: nav, Path: path, Kind: kind,
 	}, nil
 }
@@ -356,6 +361,73 @@ func (s *DocStore) Tags() []string {
 	}
 	sort.Strings(out)
 	return out
+}
+
+// DefaultCategories 决定首页分类的先后顺序。文章里用了别的名字会排在后面，
+// 没写 category 的统一进「未分类」。改这里等于改全站的分类顺序。
+var DefaultCategories = []string{"网络", "文章", "项目", "杂谈"}
+
+type CatGroup struct {
+	Name  string
+	Posts []*Doc
+}
+
+func catOf(p *Doc) string {
+	if c := strings.TrimSpace(p.Category); c != "" {
+		return c
+	}
+	return "未分类"
+}
+
+func (s *DocStore) GroupByCategory(includeDraft bool) []CatGroup {
+	byCat := map[string][]*Doc{}
+	for _, p := range s.Posts(includeDraft) {
+		c := catOf(p)
+		byCat[c] = append(byCat[c], p)
+	}
+
+	var out []CatGroup
+	for _, c := range DefaultCategories {
+		if ps, ok := byCat[c]; ok {
+			out = append(out, CatGroup{Name: c, Posts: ps})
+			delete(byCat, c)
+		}
+	}
+	var rest []string
+	for c := range byCat {
+		rest = append(rest, c)
+	}
+	sort.Strings(rest)
+	for _, c := range rest {
+		out = append(out, CatGroup{Name: c, Posts: byCat[c]})
+	}
+	return out
+}
+
+func (s *DocStore) ByCategory(cat string, includeDraft bool) []*Doc {
+	var out []*Doc
+	for _, p := range s.Posts(includeDraft) {
+		if catOf(p) == cat {
+			out = append(out, p)
+		}
+	}
+	return out
+}
+
+// AllCategories 给编辑器的下拉框用：固定四个在前，另外加上文章里出现过的其他名字。
+func (s *DocStore) AllCategories() []string {
+	known := map[string]bool{}
+	for _, c := range DefaultCategories {
+		known[c] = true
+	}
+	var extra []string
+	for _, g := range s.GroupByCategory(true) {
+		if !known[g.Name] && g.Name != "未分类" {
+			extra = append(extra, g.Name)
+		}
+	}
+	sort.Strings(extra)
+	return append(append([]string{}, DefaultCategories...), extra...)
 }
 
 // ---- 工具 ----

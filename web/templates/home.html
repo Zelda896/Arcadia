@@ -2,7 +2,7 @@
 {{if .Tagline}}<p class="sub">{{.Tagline}}</p>{{end}}
 <hr>
 {{range .Groups}}
-<h2>{{.Year}}</h2>
+<h2>{{.Name}}</h2>
 <ul>
 {{range .Posts}}
 <li><a href="{{.URL}}">{{.Title}}</a> <span class="sub">— {{mmdd .Date}}</span></li>

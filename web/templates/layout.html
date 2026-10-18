@@ -11,7 +11,7 @@
 <p><a class="brand" href="/">{{.Site.Name}}</a>{{if .Nav}}{{range .Nav}} · <a href="{{.URL}}">{{.Title}}</a>{{end}}{{end}}</p>
 {{template "content" .}}
 <hr>
-<p class="sub"><a href="/archive">归档</a> · <a href="/feed.xml">RSS</a>{{if .Site.Author}} · {{.Year}} {{.Site.Author}}{{end}}</p>
+<p class="sub">{{if .Site.Author}}{{.Year}} {{.Site.Author}} · {{end}}<a href="/feed.xml">RSS</a></p>
 {{if .AdminJS}}<script src="/admin.js" defer></script>{{end}}
 </body>
 </html>
