@@ -29,6 +29,7 @@ type PageData struct {
 	Posts    []*Doc
 	Post     *Doc
 	Page     *Doc
+	About    *Doc
 	Comments []Comment
 	Tag      string
 	CatName  string
@@ -56,6 +57,7 @@ func (a *App) base(title string) PageData {
 
 func (a *App) handleHome(w http.ResponseWriter, r *http.Request) {
 	d := a.base("")
+	d.About = a.docs.Page("about")
 	d.Groups = a.docs.GroupByCategory(false)
 	a.render(w, "home", d)
 }

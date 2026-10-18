@@ -14,6 +14,8 @@ code, pre { font-family: Consolas, "Courier New", monospace; font-size: .95em; }
 input, textarea, select, button { font: inherit; }
 textarea { width: 100%; }
 .sub { color: #555; }
+h2 a { color: inherit; }
+h2.top { margin-bottom: 1.8em; }
 .hp { display: none; }
 
 /* 目录贴在左侧留白里。只在足够宽的窗口出现——窄屏那 152 像素

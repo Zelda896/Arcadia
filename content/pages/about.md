@@ -1,5 +1,5 @@
 ---
-title: 关于
+title: 关于我
 nav: true
 order: 3
 ---

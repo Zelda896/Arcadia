@@ -1,6 +1,7 @@
 {{define "content"}}
 {{if .Tagline}}<p class="sub">{{.Tagline}}</p>{{end}}
 <hr>
+{{if .About}}<h2 class="top"><a href="/about">关于我</a></h2>{{end}}
 {{range .Groups}}
 <h2>{{.Name}}</h2>
 <ul>
