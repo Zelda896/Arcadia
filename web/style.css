@@ -1,11 +1,12 @@
 /* 浏览器默认排版，只是把内容收进中间、不让它贴到屏幕边上。
-   60rem 在 1920 屏上约占一半宽，比公众号那种 700px 的窄栏宽出一截。 */
+   62rem（992px）在 1920 屏上占一半多，比公众号那种 700px 的窄栏宽出一截，
+   又比全宽好读——一行大约 55 个汉字。 */
 
 body {
   font-family: serif;
   font-size: 18px;
   line-height: 1.6;
-  max-width: 73rem;
+  max-width: 62rem;
   margin: 0 auto;
   padding: 2em 1.5em;
 }
@@ -20,16 +21,16 @@ h2.top { margin-bottom: 1.8em; }
 .hp { display: none; }
 
 /* 目录贴在左侧留白里。只在足够宽的窗口出现——窄屏那 152 像素
-   挤不出位置，硬塞会压到正文上。1560px 是算出来的临界值：
-   正文 73rem 居中之后，两侧留白要剩下 1.5rem + 9.5rem 才放得下。 */
+   挤不出位置，硬塞会压到正文上。1400px 是算出来的临界值：
+   正文 62rem 居中之后，两侧留白要剩下 1.5rem + 9.5rem 才放得下。 */
 .toc { display: none; }
 
-@media (min-width: 1560px) {
+@media (min-width: 1400px) {
   .toc {
     display: block;
     position: fixed;
     top: 5em;
-    left: calc(50% - 47.5rem);
+    left: calc(50% - 42rem);
     width: 9.5rem;
     max-height: calc(100vh - 7em);
     overflow-y: auto;
