@@ -10,6 +10,13 @@
 {{if .Draft}}<span class="mark">草稿</span>{{end}}
 {{if .Nav}}<span class="sub">导航</span>{{end}}
 <span class="sub">{{.Slug}}</span>
+{{if ne .Slug "about"}}
+<form method="post" action="/admin/delete" class="inline" data-confirm="删掉《{{.Title}}》？文件会直接从磁盘移除，不能撤销。">
+<input type="hidden" name="kind" value="{{.Kind}}">
+<input type="hidden" name="slug" value="{{.Slug}}">
+<button type="submit" class="danger">删除</button>
+</form>
+{{end}}
 </li>
 {{else}}
 <li class="sub">还没有内容。<a href="/admin/new?kind={{.Kind}}">写第一个</a>。</li>
