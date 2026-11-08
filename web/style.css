@@ -21,39 +21,73 @@ form.inline { display: inline; margin-left: .8em; }
 form.inline button { font-size: .82rem; padding: 0 .45em; line-height: 1.6; }
 .hp { display: none; }
 
-/* 左侧分类栏。占的正是原来正文两侧留出的那块空地：
-   73rem 居中后，屏幕够宽时左边会剩下超过 11rem 的空白。
-   left 的算法：50% - 36.5rem（正文半宽）- 1.5rem（间隙）- 11rem（栏宽）
-   = calc(50% - 49rem)，也就是左栏右边缘离屏幕中线 49rem。
-   要放得下，屏幕半边至少得有 49rem + 0.75rem（body 的左右 padding）= 49.75rem
-   = 796px，全屏 1592px。取 1600px 当断点。
-   窄了就把侧栏收起来——这时候靠正文末尾的分类索引导航（.index）。
-   两个导航永远只出现一个：宽屏看侧栏，窄屏看正文下面那份。 */
-.side { display: none; }
+/* 左侧分类栏。前面说过正文 73rem 居中、两侧会留白，那块留白就给它。
+   宽度够的时候正文不动，左栏贴在中线左边；屏幕变窄时正文跟着收，
+   两边永远不重叠——不需要断点开关，也就不会出现"左栏消失、只剩
+   一条光秃秃的列表"那种情况。 */
 
-@media (min-width: 1600px) {
-  .side {
-    display: block;
-    position: fixed;
-    top: 2em;
-    left: calc(50% - 49rem);
-    width: 11rem;
-    max-height: calc(100vh - 4em);
-    overflow-y: auto;
-    font-size: .9rem;
-    line-height: 1.5;
-    text-align: right;
+/* 宽屏：正文 73rem，左栏 11rem，间隙 1.5rem。
+   左栏右边缘离中线 36.5 + 1.5 + 11 = 49rem。 */
+.side {
+  position: fixed;
+  top: 2em;
+  left: calc(50% - 36.5rem - 1.5rem - 11rem);
+  width: 11rem;
+  max-height: calc(100vh - 4em);
+  overflow-y: auto;
+  font-size: .9rem;
+  line-height: 1.5;
+  text-align: right;
+}
+.side p { margin: 0 0 .5em; }
+.side ul { list-style: none; padding: 0; margin: 0; }
+.side li { margin: .2em 0; }
+.side a { color: #555; }
+.side a:hover { color: #000; }
+.side p.side-cat { margin-top: 1.5em; font-weight: 600; }
+.side p.side-cat a { color: #000; }
+
+/* 侧栏已经在列同样的东西了，正文下面这份收起来 */
+.index { display: none; }
+
+/* 1456px 以下正文开始收窄。左边要给侧栏让位（1.5rem 起 + 10rem 宽
+   + 1.5rem 间隙 = 13rem），右边留 1.5rem 就够——正文不再是居中的窄栏，
+   而是"贴着侧栏往右铺"，这样大屏变中屏时正文宽度几乎不变。
+   1456 = 73rem + 13rem + 1.5rem + 1.5rem(padding)。 */
+@media (max-width: 1456px) {
+  body {
+    max-width: none;
+    margin: 0;
+    padding-left: 13rem;
+    padding-right: 1.5rem;
   }
-  .side p { margin: 0 0 .5em; }
-  .side ul { list-style: none; padding: 0; margin: 0; }
-  .side li { margin: .2em 0; }
-  .side a { color: #555; }
-  .side a:hover { color: #000; }
-  .side p.side-cat { margin-top: 1.5em; font-weight: 600; }
-  .side p.side-cat a { color: #000; }
+  .side { left: 1.5rem; width: 10rem; }
+}
 
-  /* 侧栏已经在列同样的东西了，正文下面这份收起来 */
-  .index { display: none; }
+/* 900px 以下：侧栏缩到 7.5rem，正文左边让 1rem + 7.5rem + 1rem = 9.5rem。
+   900px 时正文还有 ≈700px。 */
+@media (max-width: 900px) {
+  body { padding-left: 9.5rem; padding-right: 1rem; }
+  .side { left: 1rem; width: 7.5rem; font-size: .82rem; }
+}
+
+/* 手机：侧栏挪到正文上面，横过来摊成一排分类名，不再固定。
+   文章列表藏起来——手机上铺开四组标题会把首屏占满。 */
+@media (max-width: 600px) {
+  body { max-width: none; margin: 0; padding: 1.5em 1rem; }
+  .side {
+    position: static;
+    width: auto;
+    max-height: none;
+    text-align: left;
+    font-size: .85rem;
+    margin: 0 0 1.2em;
+    padding-bottom: .8em;
+    border-bottom: 1px solid #ccc;
+  }
+  .side ul { display: none; }
+  .side > p { display: inline; margin: 0 .9em 0 0; }
+  .side p.side-cat { margin: 0 .9em 0 0; font-weight: normal; }
 }
 
 /* 首页正文就是自我介绍，字号放大一点，和文章正文区分开 */
