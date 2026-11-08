@@ -69,7 +69,8 @@ try:
                              ("/post/how-this-site-works", "wide-post.png", "1600,1300"),
                              ("/c/网络", "wide-cat.png", "1600,700"),
                              ("/about", "wide-page.png", "1600,800"),
-                             ("/", "narrow-home.png", "1100,900"),
+                             ("/", "user-1090.png", "1090,900"),
+                             ("/", "edge-1600.png", "1600,900"),
                              ("/", "big-home.png", "1920,1050")]:
         ud = tempfile.mkdtemp(prefix="chr-")
         target = os.path.join(OUT, name)

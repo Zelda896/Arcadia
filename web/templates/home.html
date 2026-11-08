@@ -5,6 +5,7 @@
 
 <hr>
 
+<div class="index">
 {{range .Groups}}
 <h2><a href="/c/{{.Name}}">{{.Name}}</a></h2>
 <ul>
@@ -15,4 +16,5 @@
 {{else}}
 <p class="sub">还没有文章。</p>
 {{end}}
+</div>
 {{end}}

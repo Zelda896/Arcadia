@@ -23,17 +23,20 @@ form.inline button { font-size: .82rem; padding: 0 .45em; line-height: 1.6; }
 
 /* 左侧分类栏。占的正是原来正文两侧留出的那块空地：
    73rem 居中后，屏幕够宽时左边会剩下超过 11rem 的空白。
-   left 的算法：50% - 36.5rem（正文半宽）- 0.3rem（和正文之间留口气）- 11rem（栏宽）。
-   1400px 是临界值，再窄左栏就压到正文上了，直接藏起来——
-   这时候还能用首页正文末尾的分类索引。 */
+   left 的算法：50% - 36.5rem（正文半宽）- 1.5rem（间隙）- 11rem（栏宽）
+   = calc(50% - 49rem)，也就是左栏右边缘离屏幕中线 49rem。
+   要放得下，屏幕半边至少得有 49rem + 0.75rem（body 的左右 padding）= 49.75rem
+   = 796px，全屏 1592px。取 1600px 当断点。
+   窄了就把侧栏收起来——这时候靠正文末尾的分类索引导航（.index）。
+   两个导航永远只出现一个：宽屏看侧栏，窄屏看正文下面那份。 */
 .side { display: none; }
 
-@media (min-width: 1400px) {
+@media (min-width: 1600px) {
   .side {
     display: block;
     position: fixed;
     top: 2em;
-    left: calc(50% - 48.5rem);
+    left: calc(50% - 49rem);
     width: 11rem;
     max-height: calc(100vh - 4em);
     overflow-y: auto;
@@ -48,6 +51,9 @@ form.inline button { font-size: .82rem; padding: 0 .45em; line-height: 1.6; }
   .side a:hover { color: #000; }
   .side p.side-cat { margin-top: 1.5em; font-weight: 600; }
   .side p.side-cat a { color: #000; }
+
+  /* 侧栏已经在列同样的东西了，正文下面这份收起来 */
+  .index { display: none; }
 }
 
 /* 首页正文就是自我介绍，字号放大一点，和文章正文区分开 */
