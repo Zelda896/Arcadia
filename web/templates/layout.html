@@ -1,3 +1,16 @@
+{{define "sidebar"}}{{if .Sidebar}}
+<nav class="side">
+{{if ne .Title .Site.Name}}<p><a href="/">← 首页</a></p>{{end}}
+{{range .Sidebar}}
+<p class="side-cat"><a href="/c/{{.Name}}">{{.Name}}</a></p>
+<ul>
+{{range .Posts}}<li><a href="{{.URL}}">{{.Title}}</a></li>
+{{end}}
+</ul>
+{{end}}
+</nav>
+{{end}}{{end}}
+
 {{define "layout"}}<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -8,6 +21,7 @@
 <link rel="alternate" type="application/rss+xml" href="/feed.xml" title="{{.Site.Name}}">
 </head>
 <body>
+{{template "sidebar" .}}
 <p><a class="brand" href="/">{{.Site.Name}}</a>{{if .Nav}}{{range .Nav}} · <a href="{{.URL}}">{{.Title}}</a>{{end}}{{end}}</p>
 {{template "content" .}}
 <hr>

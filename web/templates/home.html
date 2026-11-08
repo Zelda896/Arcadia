@@ -1,9 +1,12 @@
 {{define "content"}}
-{{if .Tagline}}<p class="sub">{{.Tagline}}</p>{{end}}
+<article class="intro">
+{{if .About}}{{.About.HTML}}{{else}}<p>还没写。在 <code>content/pages/about.md</code> 里写上几句就行。</p>{{end}}
+</article>
+
 <hr>
-{{if .About}}<h2 class="top"><a href="/about">关于我</a></h2>{{end}}
+
 {{range .Groups}}
-<h2>{{.Name}}</h2>
+<h2><a href="/c/{{.Name}}">{{.Name}}</a></h2>
 <ul>
 {{range .Posts}}
 <li><a href="{{.URL}}">{{.Title}}</a> <span class="sub">— {{mmdd .Date}}</span></li>

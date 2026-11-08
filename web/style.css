@@ -21,26 +21,47 @@ form.inline { display: inline; margin-left: .8em; }
 form.inline button { font-size: .82rem; padding: 0 .45em; line-height: 1.6; }
 .hp { display: none; }
 
-/* 目录贴在左侧留白里。只在足够宽的窗口出现——窄屏那 152 像素
-   挤不出位置，硬塞会压到正文上。1560px 是算出来的临界值：
-   正文 73rem 居中之后，两侧留白要剩下 1.5rem + 9.5rem 才放得下。 */
-.toc { display: none; }
+/* 左侧分类栏。占的正是原来正文两侧留出的那块空地：
+   73rem 居中后，屏幕够宽时左边会剩下超过 11rem 的空白。
+   left 的算法：50% - 36.5rem（正文半宽）- 0.3rem（和正文之间留口气）- 11rem（栏宽）。
+   1400px 是临界值，再窄左栏就压到正文上了，直接藏起来——
+   这时候还能用首页正文末尾的分类索引。 */
+.side { display: none; }
 
-@media (min-width: 1560px) {
-  .toc {
+@media (min-width: 1400px) {
+  .side {
     display: block;
     position: fixed;
-    top: 5em;
-    left: calc(50% - 47.5rem);
-    width: 9.5rem;
-    max-height: calc(100vh - 7em);
+    top: 2em;
+    left: calc(50% - 48.5rem);
+    width: 11rem;
+    max-height: calc(100vh - 4em);
     overflow-y: auto;
-    font-size: .85rem;
-    line-height: 1.55;
+    font-size: .9rem;
+    line-height: 1.5;
+    text-align: right;
   }
-  .toc ul { list-style: none; padding: 0; margin: 0; }
-  .toc ul ul { padding-left: .9em; }
-  .toc li { margin: .3em 0; }
-  .toc a { color: #666; }
-  .toc a:hover { color: #000; }
+  .side p { margin: 0 0 .5em; }
+  .side ul { list-style: none; padding: 0; margin: 0; }
+  .side li { margin: .2em 0; }
+  .side a { color: #555; }
+  .side a:hover { color: #000; }
+  .side p.side-cat { margin-top: 1.5em; font-weight: 600; }
+  .side p.side-cat a { color: #000; }
+}
+
+/* 首页正文就是自我介绍，字号放大一点，和文章正文区分开 */
+.intro { font-size: 1.06em; }
+
+/* 跟随系统的暗色模式。只改颜色，不改版面 */
+@media (prefers-color-scheme: dark) {
+  body { background: #141414; color: #d6d6d6; }
+  a { color: #7aa9e0; }
+  .sub { color: #8e8e8e; }
+  .mark { color: #d9a441; }
+  .err { color: #e88a80; }
+  hr { border-color: #333; }
+  input, textarea, select, button { background: #1b1b1b; color: #d6d6d6; border-color: #3a3a3a; }
+  .side a { color: #8e8e8e; }
+  .side a:hover, .side p.side-cat a { color: #d6d6d6; }
 }

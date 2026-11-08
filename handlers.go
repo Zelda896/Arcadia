@@ -26,6 +26,7 @@ type PageData struct {
 	Notice  string
 
 	Groups   []CatGroup
+	Sidebar  []CatGroup
 	Posts    []*Doc
 	Post     *Doc
 	Page     *Doc
@@ -58,8 +59,24 @@ func (a *App) base(title string) PageData {
 func (a *App) handleHome(w http.ResponseWriter, r *http.Request) {
 	d := a.base("")
 	d.About = a.docs.Page("about")
+	d.Sidebar = a.sidebar(false)
+	// 左侧栏在首页也不显示：首页正文就是关于我，左边再挂一个目录很奇怪。
+	// 分类导航放在正文末尾，也就是原来的分类索引位置。
 	d.Groups = a.docs.GroupByCategory(false)
 	a.render(w, "home", d)
+}
+
+// sidebar 给左侧栏准备分类列表。返回的分类已经过滤掉草稿，
+// 空分类不出现——否则访客会点到只有草稿的分类页而吃到 404。
+func (a *App) sidebar(includeDraft bool) []CatGroup {
+	var out []CatGroup
+	for _, g := range a.docs.GroupByCategory(includeDraft) {
+		if len(g.Posts) == 0 || g.Name == "未分类" {
+			continue
+		}
+		out = append(out, g)
+	}
+	return out
 }
 
 func (a *App) handlePost(w http.ResponseWriter, r *http.Request) {
@@ -71,6 +88,7 @@ func (a *App) handlePost(w http.ResponseWriter, r *http.Request) {
 	}
 	d := a.base(p.Title)
 	d.Post = p
+	d.Sidebar = a.sidebar(false)
 	d.Comments = a.comments.ForPost(slug, a.auth.LoggedIn(r))
 	switch r.URL.Query().Get("e") {
 	case "rate":
@@ -95,6 +113,7 @@ func (a *App) handlePage(w http.ResponseWriter, r *http.Request) {
 	}
 	d := a.base(p.Title)
 	d.Page = p
+	d.Sidebar = a.sidebar(false)
 	a.render(w, "page", d)
 }
 
@@ -108,6 +127,7 @@ func (a *App) handleCategory(w http.ResponseWriter, r *http.Request) {
 	d := a.base(cat)
 	d.CatName = cat
 	d.Posts = posts
+	d.Sidebar = a.sidebar(false)
 	a.render(w, "category", d)
 }
 

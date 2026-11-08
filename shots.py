@@ -65,9 +65,12 @@ try:
         except Exception:
             time.sleep(0.25)
 
-    for path, name, size in [("/", "wide-home.png", "1600,1000"),
+    for path, name, size in [("/", "wide-home.png", "1600,1100"),
                              ("/post/how-this-site-works", "wide-post.png", "1600,1300"),
-                             ("/about", "wide-page.png", "1600,800")]:
+                             ("/c/网络", "wide-cat.png", "1600,700"),
+                             ("/about", "wide-page.png", "1600,800"),
+                             ("/", "narrow-home.png", "1100,900"),
+                             ("/", "big-home.png", "1920,1050")]:
         ud = tempfile.mkdtemp(prefix="chr-")
         target = os.path.join(OUT, name)
         subprocess.run([
